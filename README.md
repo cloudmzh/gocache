@@ -3,7 +3,7 @@
 gocache: Distributed cache framework based on consistent hashing algorithm, only applicable to Go language novice learning projects
 
 #### 描述
-gocache是一个基于Go语言实现的分布式缓存框架，参考了groupcache的设计并进行简化和修改，适合go语言初学者、分布式初学者的开源项目，不具有工业开发性。
+gocache是一个基于Go语言实现的分布式缓存框架，参考了groupcache的设计并进行简化和修改，适合go语言、分布式初学者的开源项目。
 
 #### 特点
 - gocache采用了LRU的方式读写缓存
