@@ -9,6 +9,7 @@ import (
 	"testing"
 )
 
+//
 var db = map[string]string{
 	"mzh": "scnu",
 	"cx":  "scnu",

@@ -12,7 +12,7 @@ import (
 	"sync"
 )
 
-//---------------------cache-------------------
+//---------------------cache------------------
 // The Cache is a structure that encapsulates
 //the LRU cache and supports concurrent access
 

@@ -15,6 +15,7 @@ import (
 	"sync"
 )
 
+//
 // DefaultBasePath     HTTP default path
 // DefaultReplicas     The default number of virtual nodes for a hash ring
 const (
@@ -166,7 +167,7 @@ func (h *httpGetter) Delete(group string, key string) error {
 
 	defer res.Body.Close()
 
-	//The response code is not 200 
+	//The response code is not 200
 	if res.StatusCode != http.StatusOK {
 		return fmt.Errorf("Reading response body: %v", err)
 	}
