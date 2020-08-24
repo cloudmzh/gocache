@@ -23,7 +23,7 @@ func getFromDB(key string) ([]byte, error) {
 
 func TestGet(t *testing.T) {
 	getter := GetterFunction(getFromDB)
-	g := NewGroup("new namespace", 2<<8, getter)
+	g := NewGroup("new namespace", 2<<8, 2<<8, getter)
 	g = GetGroup("new namespace")
 
 	bv, err := g.Get("mzh")

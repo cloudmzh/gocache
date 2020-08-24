@@ -6,8 +6,8 @@ package gocache
 
 import (
 	"fmt"
-	"gocache/lru"
 	"gocache/singleflight"
+	"gocache/twoqueues"
 	"log"
 	"sync"
 )
@@ -18,9 +18,10 @@ import (
 
 // cache :The LRU is packaged
 type cache struct {
-	mu         sync.Mutex
-	lru        *lru.Cache
-	maxEntries int
+	mu             sync.Mutex
+	tq             *twoqueues.Cache
+	maxLruEntries  int
+	maxFifoEntries int
 }
 
 // k-v: string-ByteView
@@ -29,20 +30,20 @@ type cache struct {
 func (c *cache) add(key string, value ByteView) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	if c.lru == nil {
-		c.lru = lru.New(c.maxEntries) //Delayed initialization
+	if c.tq == nil {
+		c.tq = twoqueues.New(c.maxLruEntries, c.maxFifoEntries) //Delayed initialization
 	}
-	c.lru.Add(key, value)
+	c.tq.Add(key, value)
 }
 
 // get :Concurrent secure LRU get
 func (c *cache) get(key string) (value ByteView, ok bool) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	if c.lru == nil {
+	if c.tq == nil {
 		return
 	}
-	if v, ok := c.lru.Get(key); ok {
+	if v, ok := c.tq.Get(key); ok {
 		return v.(ByteView), ok
 	}
 	return
@@ -52,10 +53,10 @@ func (c *cache) get(key string) (value ByteView, ok bool) {
 func (c *cache) delete(key string) bool {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	if c.lru == nil {
+	if c.tq == nil {
 		return false
 	}
-	return c.lru.Delete(key)
+	return c.tq.Delete(key)
 }
 
 //-----------------Getter---------------------
@@ -93,7 +94,7 @@ var (
 )
 
 // NewGroup +!
-func NewGroup(name string, maxEntries int, getter Getter) *Group {
+func NewGroup(name string, lMaxNum int, fMaxNum int, getter Getter) *Group {
 	if getter == nil {
 		panic("the Group getter is nil .")
 	}
@@ -103,7 +104,7 @@ func NewGroup(name string, maxEntries int, getter Getter) *Group {
 	g := &Group{
 		name:   name,
 		getter: getter,
-		data:   cache{maxEntries: maxEntries},
+		data:   cache{maxLruEntries: lMaxNum, maxFifoEntries: fMaxNum},
 		loader: &singleflight.Group{},
 	}
 
