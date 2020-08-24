@@ -6,7 +6,7 @@ gocache: Distributed cache framework based on consistent hashing algorithm, only
 gocache是一个基于Go语言实现的分布式缓存框架，参考了groupcache的设计并进行简化和修改，适合go语言、分布式初学者的开源项目。
 
 #### 特点
-- gocache采用了LRU的方式读写缓存
+- gocache采用了2Q算法的方式读写缓存
 - gocache采用一致性哈希算法(虚拟节点)实现分布式储存
 - gocache采用singleflight的方法预防缓存击穿
 - 每个gocahe既具有客户端功能又具有服务端功能
@@ -29,7 +29,7 @@ var dbsource = dbSource{
 }
 
 func main() {
-	group := gocache.NewGroup("price", 2<<5, gocache.GetterFunction(
+	group := gocache.NewGroup("price", 2<<5, 2<<4 , gocache.GetterFunction(
 		// 调用远程数据源
 		func(key string) ([]byte, error) {
 			log.Println("access dbsource", key)
