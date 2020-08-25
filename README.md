@@ -55,7 +55,7 @@ func main() {
 
 ```
 
-> 分别启动4台主机，addr分别修改成 *http://localhost:8000, http://localhost:8001, http://localhost:8002, http://localhost:8003*。我们可以选取任意一台主机当作API主机，
+> 分别启动4台主机，addr分别修改成 http://localhost:8000, http://localhost:8001, http://localhost:8002, http://localhost:8003。我们可以选取任意一台主机当作API主机，
 > 因为每个gocahe既具有客户端功能又具有服务端功能。
 > 
 现在访问8000端口主机寻找price命名组里的缓存pear：
