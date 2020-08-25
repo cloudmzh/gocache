@@ -1,6 +1,10 @@
+// Programmed by Mazehua
+// South China Normal University
+// August 25, 2020
+
 package twoqueues
 
-import ( //明天添加
+import (
 	"log"
 	"testing"
 )
